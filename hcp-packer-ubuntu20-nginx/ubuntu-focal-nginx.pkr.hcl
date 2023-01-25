@@ -10,7 +10,7 @@ packer {
 
 data "hcp-packer-image" "ubuntu20-base" {
   bucket_name    = "ubuntu20-base"
-  channel        = "development"
+  channel        = "latest"
   cloud_provider = "azure"
   region         = var.az_region
 }
