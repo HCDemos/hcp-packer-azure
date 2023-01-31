@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configure Az Credentials
-        uses: azure/login@v1
+        uses: azure/actions/login@v1
         env:
           AZURE_SECRET_ID: ${{ steps.secrets.outputs.AZURE_SECRET_ID }}
           AZURE_CLIENT_ID: ${{ steps.secrets.AZURE_CLIENT_ID }}  
