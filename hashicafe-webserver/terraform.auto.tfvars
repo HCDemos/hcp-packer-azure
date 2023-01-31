@@ -1,7 +1,0 @@
-prefix         = "hashicafe"
-location       = "eastus"
-env            = "dev"
-department     = "PlatformEng"
-owner          = "web.developer"
-packer_bucket  = "ubuntu20-nginx"
-packer_channel = "development"
