@@ -36,10 +36,10 @@ jobs:
             azure/creds/edu-app client_id | AZURE_CLIENT_ID;
             azure/creds/edu-app client_secret | AZURE_SECRET_ID;
       
-    - name: Set the values
-      run: |
-        echo "AZURE_CLIENT_ID=steps.secrets.outputs.AZURE_CLIENT_ID" >> $GITHUB_ENV
-        echo "AZURE_SECRET_ID=steps.secrets.outputs.AZURE_SECRET_ID" >> $GITHUB_ENV
+    #- name: Set the values
+      #run: |
+       # echo "AZURE_CLIENT_ID=steps.secrets.outputs.AZURE_CLIENT_ID" >> $GITHUB_ENV
+        #echo "AZURE_SECRET_ID=steps.secrets.outputs.AZURE_SECRET_ID" >> $GITHUB_ENV
 
     - name: Checkout Repository
       uses: actions/checkout@v3
