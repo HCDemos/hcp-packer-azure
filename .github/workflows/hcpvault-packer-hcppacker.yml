@@ -1,6 +1,20 @@
 name: hvpvault-packer-hcppacker
 # Run this workflow every time a new commit pushed to your repository
-on: push
+on: 
+  push:
+    tags: ["v[0-9].[0-9]+.[0-9]+"]
+    branches:
+      - "development"
+      - "staging"
+      - "main"
+
+env:
+  HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+  HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+  #HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
+  HCP_ORGANIZATION_ID: ${{ secrets.HCP_ORGANIZATION_ID }}
+  #HCP_BUCKET_NAME: "learn-packer-github-actions"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,5 +31,32 @@ jobs:
           roleId: ${{ secrets.VAULT_ROLE_ID }}
           secretId: ${{ secrets.VAULT_SECRET_ID }}
           secrets: |
-            azure/creds/edu-app client_id | ACCESS_KEY_ID;
-            azure/creds/edu-app client_secret | SECRET_ACCESS_KEY
+            azure/creds/edu-app client_id | AZURE_CLIENT_ID;
+            azure/creds/edu-app client_secret | AZURE_SECRET_ID;
+
+  build-image:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      iteration_id: ${{ steps.hcp.outputs.iteration_id }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure Az Credentials
+        uses: azure/login@v1
+        with:
+          #client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Packer Init
+        run: packer init ../hcp-packer-ubuntu20
+
+      - name: Packer Build - Branches
+        if: "startsWith(github.ref, 'refs/heads/')"
+        run: packer build ../hcp-packer-ubuntu20
+
+      - name: Packer Build - Tags
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: HCP_PACKER_BUILD_FINGERPRINT=$(date +'%m%d%YT%H%M%S') packer build .
