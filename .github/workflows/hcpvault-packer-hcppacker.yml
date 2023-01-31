@@ -1,0 +1,21 @@
+name: hvpvault-packer-hcppacker
+# Run this workflow every time a new commit pushed to your repository
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Import Secrets
+      id: secrets
+      uses: hashicorp/vault-action@v2.4.0
+      with:
+          url: https://dp-vault-cluster.vault.1e53275e-94b7-4575-b679-735c6df54970.aws.hashicorp.cloud:8200
+          tlsSkipVerify: true
+          namespace: admin
+          method: approle
+          roleId: ${{ secrets.VAULT_ROLE_ID }}
+          secretId: ${{ secrets.VAULT_SECRET_ID }}
+          secrets: |
+            azure/creds/edu-app client_id | ACCESS_KEY_ID;
+            azure/creds/edu-app client_secret | SECRET_ACCESS_KEY
