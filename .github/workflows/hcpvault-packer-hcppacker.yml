@@ -62,7 +62,7 @@ jobs:
           pwd   
 
     - name: Packer Init
-      run: packer init ../hcp-packer-ubuntu20
+      run: packer init ./hcp-packer-ubuntu20
 
     - name: Packer Build - Branches
       if: "startsWith(github.ref, 'refs/heads/')"
