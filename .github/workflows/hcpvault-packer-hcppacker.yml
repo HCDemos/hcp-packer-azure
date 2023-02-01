@@ -11,9 +11,7 @@ on:
 env:
   HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
   HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-  #HCP_PROJECT_ID: ${{ secrets.HCP_PROJECT_ID }}
   HCP_ORGANIZATION_ID: ${{ secrets.HCP_ORGANIZATION_ID }}
-  #HCP_BUCKET_NAME: "learn-packer-github-actions"
 
 jobs:
   build:
@@ -27,7 +25,7 @@ jobs:
       uses: hashicorp/vault-action@v2.5.0
       with:
           url: https://dp-vault-cluster.vault.1e53275e-94b7-4575-b679-735c6df54970.aws.hashicorp.cloud:8200
-          tlsSkipVerify: true
+          #tlsSkipVerify: true
           namespace: admin
           method: approle
           roleId: ${{ secrets.VAULT_ROLE_ID }}
@@ -35,11 +33,6 @@ jobs:
           secrets: |
             azure/creds/edu-app client_id | AZURE_CLIENT_ID;
             azure/creds/edu-app client_secret | AZURE_SECRET_ID;
-      
-    #- name: Set the values
-      #run: |
-       # echo "AZURE_CLIENT_ID=steps.secrets.outputs.AZURE_CLIENT_ID" >> $GITHUB_ENV
-        #echo "AZURE_SECRET_ID=steps.secrets.outputs.AZURE_SECRET_ID" >> $GITHUB_ENV
 
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -48,12 +41,6 @@ jobs:
       uses: azure/actions/login@v1
       with:
         creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ env.AZURE_SECRET_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
-        #client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        #tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        #subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      #env:
-        #AZURE_SECRET_ID: ${{ steps.secrets.outputs.AZURE_SECRET_ID }}
-        #AZURE_CLIENT_ID: ${{ steps.secrets.AZURE_CLIENT_ID }}
          
     - name: Run Azure CLI commands
       run: |
@@ -62,11 +49,11 @@ jobs:
           pwd   
 
     - name: Packer Init
-      run: packer init ./hcp-packer-ubuntu20
+      run: packer init ./hcp-packer-ubuntu20-nginx
 
     - name: Packer Build - Branches
       if: "startsWith(github.ref, 'refs/heads/')"
-      run: packer build ./hcp-packer-ubuntu20
+      run: packer build ./hcp-packer-ubuntu20-nginx
 
     - name: Packer Build - Tags
       if: startsWith(github.ref, 'refs/tags/v')
