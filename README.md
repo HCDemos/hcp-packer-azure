@@ -1,7 +1,10 @@
 # Automating Azure Image Pipelines with HCP Packer
 
-This repo contains the Packer and Terraform code used in the [DevOps Lab](https://learn.microsoft.com/en-us/shows/devops-lab/?terms=hashicorp) episode "Automating Azure Image Pipelines with HCP Packer".
+This repo is based on the Packer and Terraform code used in the [DevOps Lab](https://learn.microsoft.com/en-us/shows/devops-lab/?terms=hashicorp) episode "Automating Azure Image Pipelines with HCP Packer".  That original repo has been split into two separate repos, this one for the image workflow and a second repo for [deploying HashiCafe to Azure](https://github.com/HCDemos/hashicafe-Azure-HCP-PackerVault).  Both repos have been enhanced to leverage dynamic Azure credentials using HCP Vault, which was originally configured by following the directions in the learn [Azure Secrets Engine tutorial](https://developer.hashicorp.com/vault/tutorials/secrets-management/azure-secrets).  For this repo a Github Actions pipeline has been configured so that updates to the repo will trigger image updates.  Since the image updates take some time (~13minutes for each) the actual image that gets updated is controlled by updating the reference in the pipeline yaml file (so you can build the base image version before a demo and perhaps the child image during the demo - but have other things to talk about...)
 
+![Alt text](/images/image-workflow-packer-hcp-packer-vault-azure.png "HCP Vault - TFCB - Github Actions Workflow")
+
+Below are the original instructions for updates required for Azure/HCP Packer to enable them to work with this repo.   
 These configurations demonstrate using Packer to build customized Azure VM images which are published to the HCP Packer hosted image registry and consumed by a Terraform provisioning workflow. Image ancestry tracking in HCP Packer is also demonstrated by building a parent/child image pipeline.
 
 ## Requirements
