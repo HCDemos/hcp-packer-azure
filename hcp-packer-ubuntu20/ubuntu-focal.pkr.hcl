@@ -21,7 +21,7 @@ source "azure-arm" "base" {
   # Source image
   image_publisher = "Canonical"
   image_offer     = "0001-com-ubuntu-server-focal"
-  image_sku       = "20_04-lts-gen2"
+  image_sku       = "20_05-lts-gen2"
   image_version   = "latest"
 
   # Destination image
@@ -54,7 +54,7 @@ build {
       "owner"          = var.owner
       "department"     = var.department
       "os"             = "Ubuntu",
-      "ubuntu-version" = "20.04",
+      "ubuntu-version" = "20.05",
     }
     build_labels = {
       "build-time" = local.timestamp
